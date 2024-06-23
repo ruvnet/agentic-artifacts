@@ -32,8 +32,9 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
    ```
 
 ## Usage
-1. `install.sh`:
-2. `pip install -e .`
+1. `chmod +x install.sh`
+2. `install.sh`:
+3. `pip install -e .`
  
 To start the Agentic Artifacts server:
 

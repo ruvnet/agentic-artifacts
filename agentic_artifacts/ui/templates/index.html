@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Artifacts - CodeSandbox Generator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Agentic Artifacts</h1>
+        <p>Generate CodeSandbox artifacts using AI</p>
+    </header>
+
+    <main>
+        <form id="generate-form">
+            <label for="prompt">Enter your prompt:</label>
+            <textarea id="prompt" name="prompt" rows="4" required placeholder="Describe the React component or web artifact you want to generate..."></textarea>
+            <button type="submit">Generate</button>
+        </form>
+
+        <div id="loading-spinner" style="display: none;">Generating...</div>
+
+        <div id="result"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Agentic Artifacts. All rights reserved.</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
