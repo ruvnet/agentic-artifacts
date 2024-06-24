@@ -1,5 +1,5 @@
+# code_generator.py file that contains the code generation logic for generating code files and creating a CodeSandbox URL. The file defines functions to generate code files based on a prompt, create a CodeSandbox URL, verify the generated code, and return the final sandbox URL. The generate_code function is called from the generate_artifact route handler in the routes.py file to generate the code files and create the CodeSandbox URL. The code_generator module uses the Litellm completion function to interact with the GPT-4o model for code generation.
 #code_generator.py agentic_artifacts/services/code_generator.py
-
 import os
 import httpx
 import json
@@ -21,8 +21,20 @@ def create_codesandbox(files):
     parameters = {"files": files}
     parameters_json = json.dumps(parameters)
     encoded_compressed_parameters = compress_and_encode(parameters_json)
-    sandbox_url = f"https://codesandbox.io/api/v1/sandboxes/define?parameters={encoded_compressed_parameters}"
-    return sandbox_url
+    url = f"https://codesandbox.io/api/v1/sandboxes/define?json=1&parameters={encoded_compressed_parameters}"
+    
+    response = httpx.post(url)
+    if response.status_code == 200:
+        response_data = response.json()
+        sandbox_id = response_data.get('sandbox_id')
+        return {
+            "sandbox_id": sandbox_id,
+            "final_url": f"https://codesandbox.io/s/{sandbox_id}",
+            "sandbox_url": f"https://{sandbox_id}.csb.app/"
+        }
+    else:
+        logger.error(f"Error creating sandbox: {response.text}")
+        return None
 
 def is_valid_verification(response):
     """Check if the verification response is valid."""
@@ -196,7 +208,9 @@ def get_final_sandbox_url(sandbox_id):
 def generate_code(prompt):
     files = generate_code_files(prompt)
     if files:
-        sandbox_url = create_codesandbox(files)
-        return sandbox_url
-    else:
-        return None
+        sandbox_info = create_codesandbox(files)
+        if sandbox_info:
+            final_url = sandbox_info['final_url']
+            print(f"Final URL: {final_url}")  # Print the final URL to the console
+            return final_url
+    return None

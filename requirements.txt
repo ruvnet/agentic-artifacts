@@ -5,3 +5,4 @@ litellm
 python-dotenv
 uvicorn
 pydantic
+flask
