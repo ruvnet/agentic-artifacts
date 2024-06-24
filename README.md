@@ -93,7 +93,7 @@ agentic-artifacts/
 
 ## Screenshot
 
-![Agentic Artifacts Screenshot](./path/to/image.png)
+![Agentic Artifacts Screenshot](./assets/screen-shot-1.png)
 
 ## Contributing
 
