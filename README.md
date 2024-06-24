@@ -36,17 +36,7 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
 
 ## Usage
 
-1. Make the install script executable:
-   ```sh
-   chmod +x install.sh
-   ```
-
-2. Run the install script:
-   ```sh
-   ./install.sh
-   ```
-
-3. Install the package in editable mode:
+1. Install the package in editable mode:
    ```sh
    pip install -e .
    ```
