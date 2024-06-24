@@ -36,6 +36,62 @@ async def generate_artifact(request: Request) -> Dict[str, Any]:
         logger.exception("An error occurred during artifact generation")
         return {"error": str(e)}
 
+@get("/plan")
+async def plan_artifact(request: Request) -> Dict[str, Any]:
+    try:
+        prompt = request.query_params.get("prompt")
+        logger.info(f"Received prompt for planning: {prompt}")
+        if not prompt:
+            logger.error("No prompt provided")
+            return {"error": "No prompt provided"}
+
+        plan_response = completion(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an expert in software planning."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        plan_content = plan_response['choices'][0]['message']['content'].strip()
+        return {"plan": plan_content}
+    except Exception as e:
+        logger.exception("An error occurred during planning")
+        return {"error": str(e)}
+
+@get("/overview")
+async def overview_artifact(request: Request) -> Dict[str, Any]:
+    try:
+        prompt = request.query_params.get("prompt")
+        logger.info(f"Received prompt for overview: {prompt}")
+        if not prompt:
+            logger.error("No prompt provided")
+            return {"error": "No prompt provided"}
+
+        overview_response = completion(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an expert in software implementation."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        overview_content = overview_response['choices'][0]['message']['content'].strip()
+        return {"overview": overview_content}
+    except Exception as e:
+        logger.exception("An error occurred during overview generation")
+        return {"error": str(e)}
+
+app = Litestar(
+    route_handlers=[home, plan_artifact, overview_artifact, generate_artifact],
+    template_config=TemplateConfig(
+        directory="agentic_artifacts/ui/templates",
+        engine=JinjaTemplateEngine
+    ),
+    static_files_config=[
+        StaticFilesConfig(directories=["agentic_artifacts/ui/static"], path="/static")
+    ],
+)
+
+
 app = Litestar(
     route_handlers=[home, generate_artifact],
     template_config=TemplateConfig(

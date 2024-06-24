@@ -11,6 +11,10 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
 - Web-based UI for easy interaction
 - Command-line interface for advanced users
 
+
+![Agentic Artifacts Screenshot](./assets/screen-shot-1.png)
+
+
 ## Installation
 
 1. Clone the repository:
@@ -90,10 +94,6 @@ agentic-artifacts/
 ├── README.md
 └── main.py
 ```
-
-## Screenshot
-
-![Agentic Artifacts Screenshot](./assets/screen-shot-1.png)
 
 ## Contributing
 
