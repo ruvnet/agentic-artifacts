@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
     const resultDiv = document.getElementById('result');
     const loadingSpinner = document.getElementById('loading-spinner');
-    const progressMessage = document.getElementById('progress-message');
 
     generateForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultDiv.innerHTML = '';
         loadingSpinner.style.display = 'block';
-        progressMessage.innerHTML = 'Generating your sandbox...';
 
         try {
             const response = await fetch(`/generate?prompt=${encodeURIComponent(prompt)}`);
@@ -50,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }).then(res => res.json())
                           .then(data => {
                               if (data.fixed_code) {
+                                  // Display the fixed code or update the iframe
                                   resultDiv.innerHTML += `<pre>${data.fixed_code}</pre>`;
                               } else if (data.error) {
                                   resultDiv.innerHTML += `<div class="error">Error: ${data.error}</div>`;
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
         } finally {
             loadingSpinner.style.display = 'none';
-            progressMessage.innerHTML = '';
         }
     });
 });

@@ -1,3 +1,4 @@
+#routes.py file that contains the route handlers for the Litestar UI server. The file defines two route handlers: one for the home page and one for generating an artifact. The home route handler returns a welcome message, while the generate_artifact route handler generates a CodeSandbox URL based on the provided prompt. The generate_artifact route handler calls the generate_code function from the code_generator module to generate the code files and create the CodeSandbox URL. The route handlers are registered with the Litestar app in the main.py file.
 import logging
 from typing import Dict, Any
 from litestar import Litestar, get, Request
