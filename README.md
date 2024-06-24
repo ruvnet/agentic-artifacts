@@ -14,23 +14,22 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
 
 ![Agentic Artifacts Screenshot](./assets/screen-shot-1.png)
 
-
 ## Installation
 
 1. Clone the repository:
-   ```
+   ```sh
    git clone https://github.com/ruvnet/agentic-artifacts.git
    cd agentic-artifacts
    ```
 
 2. Install the required dependencies:
-   ```
+   ```sh
    pip install -r requirements.txt
    ```
 
 3. Set up your environment variables:
    Create a `.env` file in the root directory and add your API keys:
-   ```
+   ```sh
    OPENAI_API_KEY=your_openai_api_key
    CODESANDBOX_API_KEY=your_codesandbox_api_key
    ```
@@ -38,24 +37,24 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
 ## Usage
 
 1. Make the install script executable:
-   ```
+   ```sh
    chmod +x install.sh
    ```
 
 2. Run the install script:
-   ```
+   ```sh
    ./install.sh
    ```
 
 3. Install the package in editable mode:
-   ```
+   ```sh
    pip install -e .
    ```
 
 To start the Agentic Artifacts server:
 
-```
-python main.py
+```sh
+agentic-artifacts
 ```
 
 ## Project Structure

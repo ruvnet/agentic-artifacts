@@ -1,5 +1,3 @@
-#main.py file that contains the main function to run the Litestar UI server and open the browser. The main function loads the environment variables, displays a banner, checks the environment, starts the Litestar UI server, and opens the browser to the UI URL. The main function also provides instructions on how to access the UI from other devices on the network and how to stop the server.
-
 import logging
 import os
 import sys
@@ -14,7 +12,7 @@ from litestar.static_files import StaticFilesConfig
 from litestar.template import TemplateConfig
 from litestar.contrib.jinja import JinjaTemplateEngine
 from agentic_artifacts.utils.config import check_environment
-from agentic_artifacts.api.routes import home, generate_artifact
+from agentic_artifacts.api.routes import home, generate_artifact, plan_artifact, overview_artifact
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -35,7 +33,7 @@ async def root() -> Template:
     return Template(template_name="index.html", context={"message": "Welcome to Agentic Artifacts"})
 
 app = Litestar(
-    route_handlers=[home, generate_artifact],
+    route_handlers=[home, plan_artifact, overview_artifact, generate_artifact],
     template_config=TemplateConfig(
         directory="agentic_artifacts/ui/templates",
         engine=JinjaTemplateEngine

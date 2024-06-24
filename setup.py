@@ -12,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ruvnet/agentic-artifacts",
-    packages=find_packages(),
+    packages=find_packages(include=["agentic_artifacts", "agentic_artifacts.*"]),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -35,7 +35,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "agentic-artifacts=agentic_artifacts.main:main",
+            "agentic-artifacts=main:main",
         ],
     },
 )
