@@ -74,11 +74,12 @@ def verify_and_refine_code(function_response, retry_count=3):
 
     return False
 
-def generate_code_files(prompt, timeout=320.0):
-    try:
-        response = completion(
-            model="gpt-4o",
-            messages=[
+def generate_code_files(prompt, timeout=320.0, retry_count=3):
+    for attempt in range(retry_count):
+        try:
+            response = completion(
+                model="gpt-4o",
+                messages=[
                 {
                     "role": "system",
                     "content": (
@@ -88,6 +89,9 @@ def generate_code_files(prompt, timeout=320.0):
                         "Make sure to use correct import paths for all modules, including 'react-dom/client'. "
                         "Include error handling, comments, and modular code structure where applicable. "
                         "Provide multiple functionalities and configuration options if relevant. "
+                        "Include detailed comments explaining the purpose and functionality of each section of the code. "
+                        "Adhere to best practices for readability, maintainability, and performance. "
+                        "Use modern JavaScript features and ensure compatibility with the latest standards. "
                         "Perform recursive self-assessment with three internal loops for code review and improvement. "
                         "For example, respond with: "
                         '{"index.js": {"content": "code here"}, "App.css": {"content": "code here"}, "package.json": {"content": "code here"}}'
@@ -95,108 +99,100 @@ def generate_code_files(prompt, timeout=320.0):
                 },
                 {"role": "user", "content": prompt}
             ],
-            functions=[
-                {
-                    "name": "generate_code_files",
-                    "description": "Generates code files",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "index.js": {
-                                "type": "object",
-                                "properties": {
-                                    "content": {"type": "string"}
+
+                functions=[
+                    {
+                        "name": "generate_code_files",
+                        "description": "Generates code files",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "index.js": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
                                 },
-                                "required": ["content"]
+                                "App.css": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                },
+                                "package.json": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                },
+                                "App.js": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                },
+                                "README.md": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                },
+                                ".eslintrc.json": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                },
+                                "babel.config.json": {
+                                    "type": "object",
+                                    "properties": {
+                                        "content": {"type": "string"}
+                                    },
+                                    "required": ["content"]
+                                }
                             },
-                            "App.css": {
-                                "type": "object",
-                                "properties": {
-                                    "content": {"type": "string"}
-                                },
-                                "required": ["content"]
-                            },
-                            "package.json": {
-                                "type": "object",
-                                "properties": {
-                                    "content": {"type": "string"}
-                                },
-                                "required": ["content"]
-                            },
-                            "App.js": {
-                                "type": "object",
-                                "properties": {
-                                    "content": {"type": "string"}
-                                },
-                                "required": ["content"]
-                            }
-                        },
-                        "required": ["index.js", "App.css", "package.json", "App.js"]
+                            "required": ["index.js", "App.css", "package.json", "App.js", "README.md", ".eslintrc.json", "babel.config.json"]
+                        }
                     }
-                }
-            ],
-            function_call="auto",
-            timeout=timeout
-        )
+                ],
+                function_call="auto",
+                timeout=timeout
+            )
 
-        logger.info(f"Raw response: {response}")
+            logger.info(f"Raw response: {response}")
 
-        if response.choices[0].finish_reason == 'function_call':
-            function_response = response.choices[0].message.function_call.arguments
-            if not function_response:
-                logger.error("Function call returned empty response.")
-                return None
-
-            # Try to load the function response as JSON
-            try:
-                code_files = json.loads(function_response)
-            except json.JSONDecodeError as e:
-                logger.error(f"JSONDecodeError: {e}")
-                prompt += f"\nError encountered: {str(e)}"
-                response = completion(
-                    model="gpt-4o",
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": (
-                                "You are an expert in generating clean, efficient, and modern code. "
-                                "Generate only the necessary code files based on the given prompt. "
-                                "Ensure the code is fully functional, formatted correctly, and includes all necessary dependencies. "
-                                "Make sure to use correct import paths for all modules, including 'react-dom/client'. "
-                                "Include error handling, comments, and modular code structure where applicable. "
-                                "Provide multiple functionalities and configuration options if relevant. "
-                                "Perform recursive self-assessment with three internal loops for code review and improvement. "
-                                "For example, respond with: "
-                                '{"index.js": {"content": "code here"}, "App.css": {"content": "code here"}, "package.json": {"content": "code here"}}'
-                            )
-                        },
-                        {"role": "user", "content": prompt}
-                    ],
-                    function_call="auto",
-                    timeout=timeout
-                )
+            if response.choices[0].finish_reason == 'function_call':
                 function_response = response.choices[0].message.function_call.arguments
-
                 if not function_response:
-                    logger.error("Retry failed: Function call returned empty response.")
-                    return None
+                    logger.error("Function call returned empty response.")
+                    continue
 
-                code_files = json.loads(function_response)
+                # Try to load the function response as JSON
+                try:
+                    code_files = json.loads(function_response)
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSONDecodeError: {e}")
+                    prompt += f"\nError encountered: {str(e)}"
+                    continue
 
-            # Perform verification
-            if verify_and_refine_code(function_response):
-                logger.info(f"Verified code files: {code_files}")
-                return code_files
-            else:
-                logger.error("Code verification failed after retries.")
-                return None
+                # Perform verification
+                if verify_and_refine_code(function_response):
+                    logger.info(f"Verified code files: {code_files}")
+                    return code_files
+                else:
+                    logger.error("Code verification failed after retries.")
+                    continue
 
-        logger.error("No valid function call arguments found in the response")
-        return None
-
-    except Exception as e:
-        logger.exception("An error occurred during code generation")
-        raise
+            logger.error("No valid function call arguments found in the response")
+        except Exception as e:
+            logger.exception("An error occurred during code generation")
+    return None
 
 def get_final_sandbox_url(sandbox_id):
     """Retrieve the final sandbox URL using the sandbox_id."""
