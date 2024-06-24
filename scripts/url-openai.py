@@ -1,6 +1,7 @@
 import json
 from lzstring import LZString
 from urllib.parse import quote
+from litellm import completion
 
 # Define the file contents
 files = {
@@ -150,23 +151,28 @@ footer {
     }
 }
 
-# Wrap the files dictionary in the expected structure
-parameters = {
-    "files": files
-}
+# Function to generate CodeSandbox URL
+def generate_sandbox_url(files):
+    # Wrap the files dictionary in the expected structure
+    parameters = {"files": files}
 
-# Convert the parameters to a JSON string
-parameters_json = json.dumps(parameters)
+    # Convert the parameters to a JSON string
+    parameters_json = json.dumps(parameters)
 
-# Compress the JSON string
-lz = LZString()
-compressed_parameters = lz.compressToBase64(parameters_json)
+    # Compress the JSON string
+    lz = LZString()
+    compressed_parameters = lz.compressToBase64(parameters_json)
 
-# Encode the compressed string for the URL
-encoded_compressed_parameters = quote(compressed_parameters)
+    # Encode the compressed string for the URL
+    encoded_compressed_parameters = quote(compressed_parameters)
 
-# Construct the URL
-api_url = f"https://codesandbox.io/api/v1/sandboxes/define?parameters={encoded_compressed_parameters}"
+    # Construct the URL
+    sandbox_url = f"https://codesandbox.io/api/v1/sandboxes/define?parameters={encoded_compressed_parameters}"
+    
+    return sandbox_url
 
-# Output the URL
-print(api_url)
+# Generate the URL
+sandbox_url = generate_sandbox_url(files)
+
+# Print the URL
+print(sandbox_url)

@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agentic Artifacts - CodeSandbox Generator</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        #loading-spinner {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        #progress-message {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -19,8 +32,8 @@
             <button type="submit">Generate</button>
         </form>
 
-        <div id="loading-spinner" style="display: none;">Generating...</div>
-
+        <div id="loading-spinner">Loading...</div>
+        <div id="progress-message"></div>
         <div id="result"></div>
     </main>
 

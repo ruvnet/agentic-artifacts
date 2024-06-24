@@ -32,17 +32,30 @@ Agentic Artifacts is a tool for generating and managing CodeSandbox artifacts us
    ```
 
 ## Usage
-1. `chmod +x install.sh`
-2. `install.sh`:
-3. `pip install -e .`
- 
+
+1. Make the install script executable:
+   ```
+   chmod +x install.sh
+   ```
+
+2. Run the install script:
+   ```
+   ./install.sh
+   ```
+
+3. Install the package in editable mode:
+   ```
+   pip install -e .
+   ```
+
 To start the Agentic Artifacts server:
 
 ```
-python agentic-artifacts
+python main.py
 ```
 
- Project Structure:
+## Project Structure
+
 ```
 agentic-artifacts/
 │
@@ -77,3 +90,15 @@ agentic-artifacts/
 ├── README.md
 └── main.py
 ```
+
+## Screenshot
+
+![Agentic Artifacts Screenshot](./path/to/image.png)
+
+## Contributing
+
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.

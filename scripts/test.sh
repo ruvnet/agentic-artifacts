@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the API endpoint
-API_ENDPOINT="https://codesandbox.io/api/v1/sandboxes/define?json=1"
+API_ENDPOINT="https://httpbin.org/post"
 
 # Get the API key from the environment variable (GitHub Secret)
 API_KEY=$CODESANDBOX_API_KEY
@@ -31,11 +31,5 @@ response=$(curl -s -X POST \
    -d "$JSON_PAYLOAD" \
    "$API_ENDPOINT")
 
-# Extract the sandbox_id from the response
-sandbox_id=$(echo $response | jq -r '.sandbox_id')
-
-# Construct the URL
-sandbox_url="https://codesandbox.io/s/$sandbox_id"
-
-# Output the sandbox URL
-echo "Sandbox URL: $sandbox_url"
+# Output the response
+echo "Response: $response"

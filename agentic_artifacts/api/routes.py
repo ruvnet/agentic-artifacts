@@ -6,7 +6,6 @@ from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.static_files import StaticFilesConfig
 from litestar.template import TemplateConfig
 from agentic_artifacts.services.code_generator import generate_code
-from agentic_artifacts.services.sandbox_manager import create_codesandbox
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,17 +24,10 @@ async def generate_artifact(request: Request) -> Dict[str, Any]:
             logger.error("No prompt provided")
             return {"error": "No prompt provided"}
 
-        code_files = generate_code(prompt)
-        if not code_files:
+        sandbox_url = generate_code(prompt)
+        if not sandbox_url:
             logger.error(f"Failed to generate code for prompt: {prompt}")
             return {"error": "Failed to generate code"}
-
-        logger.info(f"Generated code files: {code_files}")
-
-        sandbox_url = create_codesandbox(code_files)
-        if not sandbox_url:
-            logger.error("Failed to create sandbox")
-            return {"error": "Failed to create sandbox"}
 
         logger.info(f"Generated sandbox URL: {sandbox_url}")
         return {"preview_url": sandbox_url}
